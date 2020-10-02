@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"math"
-	"time"
 )
 
 // Matrix has some interesting methods for matrices computation
@@ -15,13 +14,6 @@ func create2DArray(x, y int) [][]float64 {
 		output[i] = make([]float64, y)
 	}
 	return output
-
-	// https://stackoverflow.com/questions/23869717/initialize-a-2d-dynamic-array-in-go
-	// M := make([][]uint8, row)
-	// e := make([]uint8, row * col)
-	// for i := range M {
-	// 	a[i] = e[i * col:(i + 1) * col]
-	// }
 }
 
 // I creates a identity Matrix of size n
@@ -213,110 +205,4 @@ func (A Matrix) Tr() (float64, *string) {
 		sum += A[k][k]
 	}
 	return sum, nil
-}
-
-func print(i ...interface{}) {
-	for _, v := range i {
-		switch t := v.(type) {
-		case Matrix:
-			fmt.Println("Matrix [")
-			for _, x := range t {
-				fmt.Printf("  %v,\n", x)
-			}
-			fmt.Println("]")
-		case *string:
-			if t != nil {
-				fmt.Println(*t)
-			}
-		default:
-			fmt.Println(v)
-		}
-	}
-}
-
-func loop(number int) {
-	for x := 0; x < number; x++ {
-		A := Matrix{
-			{1, 2, 3},
-			{4, 5, 6},
-			{7, 8, 9},
-		}
-		B := Matrix{
-			{1, 0, 0},
-			{0, 0, 1},
-			{0, 1, 0},
-		}
-		E := Matrix{
-			{1, 2},
-			{2, -3},
-		}
-
-		MatrixAdd(A, B)
-		MatrixSub(A, B)
-		MatrixMul(6, A)
-		DotProduct(A, B)
-		DotProduct(B, A)
-		A.Minor(2, 2)
-		A.Cofactor(2, 2)
-		E.Inv()
-		A.T()
-		A.Det()
-		A.Tr()
-	}
-}
-
-func repeat(repeat int, number int) {
-	for x := 0; x < repeat; x++ {
-		start := time.Now()
-
-		loop(number)
-
-		end := time.Since(start)
-		fmt.Println(end)
-	}
-}
-
-func main() {
-	// A := Matrix{
-	// 	{1, 2, 3},
-	// 	{4, 5, 6},
-	// 	{7, 8, 9}}
-
-	// B := Matrix{
-	// 	{1, 0, 0},
-	// 	{0, 0, 1},
-	// 	{0, 1, 0}}
-	// E := Matrix{
-	// 	{1, 2},
-	// 	{2, -3}}
-	// H := Matrix{
-	// 	{4, 2, 3, 9, 9},
-	// 	{-2, 4, 7, -7, -7},
-	// 	{2, 3, 11, 1, 1},
-	// 	{1, 1, 2, -3, -1},
-	// 	{1, 1, 2, 0, 1}}
-	// H := Matrix{
-	// 	{2, 3, 9, 9},
-	// 	{4, 7, -7, -7},
-	// 	{3, 11, 1, 1},
-	// 	{1, 2, -3, -1}}
-
-	// print(MatrixAdd(A, B))
-	// print(MatrixSub(A, B))
-	// print(MatrixMul(6, A))
-	// print(DotProduct(A, B))
-	// print(DotProduct(B, A))
-	// print(A.Minor(2, 2))
-	// print(A.Cofactor(2, 2))
-	// print(A.T())
-	// print(A.Det()) // wrong
-	// print(A.Tr())
-
-	// print(H.Minor(2, 2))
-	// print(H.Cofactor(2, 2))
-	// print(H)
-	// print(H.Det())
-	// print(H)
-
-	repeat(5, 10000)
 }
