@@ -70,9 +70,26 @@ func main() {
 	// print(H.Cofactor(2, 2))
 	// print(H.Det())
 
-	number := 100000
-	repeat := 5
-	fmt.Println(timeitRepeat(matrixBenchmark, number, repeat))
+	// repeat := 5
+	// fmt.Println(timeitRepeat(matrixBenchmark, 1000, repeat))
 	// fmt.Println(timeitRepeat(forRange, 1000, repeat))
 	// fmt.Println(timeitRepeat(forClassic, 1000, repeat))
+
+	// A := Matrix{
+	// 	{0, 3, 0, 8},
+	// 	{6, 2, 5, 3},
+	// 	{0, 1, 3, 8},
+	// 	{6, 2, 9, 8},
+	// }
+	A := Matrix{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+
+	fmt.Println(A.Det())
+	fmt.Println(A.oldDet())
+
+	// fmt.Println(timeitRepeat(func() { A.oldDet() }, 100000, 5))
+	// fmt.Println(timeitRepeat(func() { A.Det() }, 100000, 5))
 }

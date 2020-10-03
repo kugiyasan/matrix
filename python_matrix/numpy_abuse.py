@@ -48,6 +48,14 @@ def loop():
     np.linalg.det(A)
     np.trace(A)
 
+# times = timeit.repeat(stmt=loop, setup=setup, repeat=5, number=10000)
+# print("\n".join(str(t*1000) for t in times))
 
-times = timeit.repeat(stmt=loop, setup=setup, repeat=5, number=10000)
-print("\n".join(str(t*1000) for t in times))
+
+A = np.array([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+])
+
+print(np.linalg.det(A))
