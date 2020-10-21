@@ -14,9 +14,9 @@ func print(i ...interface{}) {
 				fmt.Printf("  %v,\n", x)
 			}
 			fmt.Println("]")
-		case *string:
+		case error:
 			if t != nil {
-				fmt.Println(*t)
+				fmt.Println(t)
 			}
 		default:
 			fmt.Println(v)
@@ -38,58 +38,6 @@ func timeitRepeat(stmt func(), number, repeat int) []time.Duration {
 }
 
 func main() {
-	// A := Matrix{
-	// 	{1, 2, 3},
-	// 	{4, 5, 6},
-	// 	{7, 8, 9}}
-	// B := Matrix{
-	// 	{1, 0, 0},
-	// 	{0, 0, 1},
-	// 	{0, 1, 0}}
-	// E := Matrix{
-	// 	{1, 2},
-	// 	{2, -3}}
-	// H := Matrix{
-	// 	{2, 3, 9, 9},
-	// 	{4, 7, -7, -7},
-	// 	{3, 11, 1, 1},
-	// 	{1, 2, -3, -1}}
-
-	// print(MatrixAdd(A, B))
-	// print(MatrixSub(A, B))
-	// print(MatrixMul(6, A))
-	// print(DotProduct(A, B))
-	// print(DotProduct(B, A))
-	// print(A.Minor(2, 2))
-	// print(A.Cofactor(2, 2))
-	// print(A.T())
-	// print(A.Det())
-	// print(A.Tr())
-
-	// print(H.Minor(2, 2))
-	// print(H.Cofactor(2, 2))
-	// print(H.Det())
-
-	// repeat := 5
-	// fmt.Println(timeitRepeat(matrixBenchmark, 1000, repeat))
-	// fmt.Println(timeitRepeat(forRange, 1000, repeat))
-	// fmt.Println(timeitRepeat(forClassic, 1000, repeat))
-
-	// A := Matrix{
-	// 	{0, 3, 0, 8},
-	// 	{6, 2, 5, 3},
-	// 	{0, 1, 3, 8},
-	// 	{6, 2, 9, 8},
-	// }
-	A := Matrix{
-		{1, 2, 3},
-		{4, 5, 6},
-		{7, 8, 9},
-	}
-
-	fmt.Println(A.Det())
-	fmt.Println(A.oldDet())
-
-	// fmt.Println(timeitRepeat(func() { A.oldDet() }, 100000, 5))
-	// fmt.Println(timeitRepeat(func() { A.Det() }, 100000, 5))
+	repeat := 5
+	fmt.Println(timeitRepeat(matrixBenchmark, 10000, repeat))
 }

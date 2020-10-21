@@ -101,8 +101,44 @@ def adj(matrix: Matrix):
 
     return Matrix(output).T
 
+def det(A: Matrix):
+    """det returns the determinant of the given Matrix"""
+    if len(A) != len(A[0]):
+        raise ValueError("You need a square matrix to find the determinant")
 
-def det(matrix: Matrix):
+    if len(A) == 1:
+        return A[0][0]
+    elif len(A) == 2:
+        return A[0][0] * A[1][1] - A[1][0] * A[0][1]
+
+    # https://integratedmlai.com/find-the-determinant-of-a-matrix-with-pure-python-without-numpy-or-scipy/
+    # Section 1: Establish n parameter and copy A
+    n = len(A)
+    AM = [[0] * len(A[0]) for _ in range(len(A))]
+    for i in range(len(AM)):
+        AM[i] = A[i][:]
+
+ 
+    # Section 2: Row ops on A to get in upper triangle form
+    for fd in range(n): # A) fd stands for focus diagonal
+        for i in range(fd+1,n): # B) only use rows below fd row
+            if AM[fd][fd] == 0: # C) if diagonal is zero ...
+                AM[fd][fd] == 1.0e-18 # change to ~zero
+            # D) cr stands for "current row"
+            crScaler = AM[i][fd] / AM[fd][fd] 
+            # E) cr - crScaler * fdRow, one element at a time
+            for j in range(n): 
+                AM[i][j] = AM[i][j] - crScaler * AM[fd][j]
+     
+    # Section 3: Once AM is in upper triangle form ...
+    product = 1.0
+    for i in range(n):
+        # ... product of diagonals is determinant
+        product *= AM[i][i] 
+ 
+    return product
+
+def oldDet(matrix: Matrix):
     """det returns the determinant of the given Matrix"""
     if len(matrix) != len(matrix[0]):
         raise ValueError("You need a square matrix to find the determinant")
@@ -131,16 +167,16 @@ def I(n):
     return Matrix([[int(i == j) for j in range(n)] for i in range(n)])
 
 
-A = Matrix([
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
-])
-B = Matrix([
-    [1, 0, 0],
-    [0, 0, 1],
-    [0, 1, 0]
-])
+# A = Matrix([
+#     [1, 2, 3],
+#     [4, 5, 6],
+#     [7, 8, 9]
+# ])
+# B = Matrix([
+#     [1, 0, 0],
+#     [0, 0, 1],
+#     [0, 1, 0]
+# ])
 
 # C = Matrix([
 #     [1, 2, 3],
@@ -199,32 +235,32 @@ B = Matrix([
 
 def loop():
     A = Matrix([
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9]
-    ])
-    B = Matrix([
-        [1, 0, 0],
-        [0, 0, 1],
-        [0, 1, 0]
-    ])
-    E = Matrix([
-        [1, 2],
-        [2, -3]
+        [1, 2, 1, 0, 23, 45, -12, 6, -1, 3],
+        [4, 5, 2, -5, -1, -5, 0, 6, 21, 4],
+        [4, 7, -7, 8, -8, 9, 4, 1, 6, 5],
+        [7, 2, 5, 11, 2, 43, 41, 13, 15, 67],
+        [-14, 15, 1, -7, 6, -81, 1, 456, -4, -464],
+        [-2, 5, 144, 3, 10, 17, 78, 29, 65, 9],
+        [4, 46, -561, 145, -5, 54, 613, 41, 854, 6],
+        [4, 21, -56, 41, 84, 879, 12, 84, 6, 45],
+        [4, 71, 54, 12051, 65, 98, 7, 86951, 1, 51],
+        [-100, -1, -8, 4, 2, 7, 4, -42, 7, 42],
     ])
 
-    A + B
-    A - B
-    6 * A
-    A * B
-    B * A
-    A.minor(2, 2)
-    A.cofactor(2, 2)
-    E.inv()
-    A.T
+    # A + B
+    # A - B
+    # A * B
+    # B * A
+    # 6 * A
+    # A.minor(2, 2)
+    # A.cofactor(2, 2)
+    # A.T
+    # print(det(A))
     det(A)
-    tr(A)
+    # print(oldDet(A))
+    # tr(A)
+    # E.inv()
 
 
 times = timeit.repeat(stmt=loop, repeat=5, number=10000)
-print("\n".join(str(t*1000) for t in times))
+print("[" + " ".join("{:.4f}ms".format(t*1000) for t in times) + "]")

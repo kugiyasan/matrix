@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math"
 )
@@ -26,10 +27,10 @@ func I(n int) Matrix {
 }
 
 // MatrixAdd adds two matrices together
-func MatrixAdd(A, B Matrix) (Matrix, *string) {
+func MatrixAdd(A, B Matrix) (Matrix, error) {
 	if len(A) != len(B) || len(A[0]) != len(B[0]) {
-		err := "Can't add two matrices of different size"
-		return Matrix{}, &err
+		err := errors.New("Can't add two matrices of different size")
+		return Matrix{}, err
 	}
 
 	output := create2DArray(len(A), len(A[0]))
@@ -43,10 +44,10 @@ func MatrixAdd(A, B Matrix) (Matrix, *string) {
 }
 
 // MatrixSub substracts two matrices together
-func MatrixSub(A, B Matrix) (Matrix, *string) {
+func MatrixSub(A, B Matrix) (Matrix, error) {
 	if len(A) != len(B) || len(A[0]) != len(B[0]) {
 		err := "Can't substract two matrices of different size"
-		return Matrix{}, &err
+		return Matrix{}, errors.New(err)
 	}
 
 	output := create2DArray(len(A), len(A[0]))
@@ -72,10 +73,10 @@ func MatrixMul(k float64, A Matrix) Matrix {
 }
 
 // DotProduct does a matrix multiplication (AB)
-func DotProduct(A, B Matrix) (Matrix, *string) {
+func DotProduct(A, B Matrix) (Matrix, error) {
 	if len(A[0]) != len(B) {
 		err := "Those matrices aren't compatible for dot product"
-		return Matrix{}, &err
+		return Matrix{}, errors.New(err)
 	}
 
 	n := len(A[0])
@@ -108,10 +109,10 @@ func (A *Matrix) T() Matrix {
 }
 
 // Tr returns the trace of the Matrix
-func (A *Matrix) Tr() (float64, *string) {
+func (A *Matrix) Tr() (float64, error) {
 	if len(*A) != len((*A)[0]) {
-		err := "The matrix should be in a square shape"
-		return 0, &err
+		err := "The matrix should have a square shape"
+		return 0, errors.New(err)
 	}
 
 	sum := 0.
@@ -122,10 +123,10 @@ func (A *Matrix) Tr() (float64, *string) {
 }
 
 // Minor returns the minor of the Matrix
-func (A *Matrix) Minor(i, j int) (float64, *string) {
+func (A *Matrix) Minor(i, j int) (float64, error) {
 	if i >= len(*A) || j >= len((*A)[0]) {
 		err := fmt.Sprintf("(%d, %d) is outside the Matrix of size (%d, %d)", i, j, len(*A), len((*A)[0]))
-		return 0, &err
+		return 0, errors.New(err)
 	}
 
 	// Deep copy the Matrix
@@ -146,7 +147,7 @@ func (A *Matrix) Minor(i, j int) (float64, *string) {
 }
 
 // Cofactor returns the cofactor of the Matrix
-func (A Matrix) Cofactor(i, j int) (float64, *string) {
+func (A Matrix) Cofactor(i, j int) (float64, error) {
 	minor, err := A.Minor(i, j)
 	return math.Pow(-1, float64(i+j)) * minor, err
 }
@@ -183,49 +184,20 @@ func (A *Matrix) Det() float64 {
 	return product
 }
 
-func (A *Matrix) oldDet() float64 {
-	// idk if I should panic or return the error, but yeah panic is easier
-	if len(*A) != len((*A)[0]) {
-		err := "You need a square matrix to find the determinant"
-		panic(&err)
-	}
-
-	if len(*A) == 1 {
-		return (*A)[0][0]
-	} else if len(*A) == 2 {
-		return (*A)[0][0]*(*A)[1][1] - (*A)[1][0]*(*A)[0][1]
-	}
-
-	AWithoutFirstColumn := make([][]float64, len(*A))
-	for i := range AWithoutFirstColumn {
-		AWithoutFirstColumn[i] = make([]float64, len((*A)[0])-1)
-	}
-
-	n := len(*A)
-	sum := 0.
-	for k := 0; k < n; k++ {
-		submatrix := Matrix(append(AWithoutFirstColumn[:k], AWithoutFirstColumn[k+1:]...))
-		cofactor := math.Pow(-1, float64(k)) * submatrix.Det()
-		sum += (*A)[k][0] * cofactor
-	}
-
-	return sum
-}
-
 // Inv returns the inverted Matrix
-func (A *Matrix) Inv() (Matrix, *string) {
+func (A *Matrix) Inv() (Matrix, error) {
 	determinant := A.Det()
 	if determinant == 0 {
 		err := "The determinant is null, the inverse can't be compute"
-		return Matrix{}, &err
+		return Matrix{}, errors.New(err)
 	}
 
 	adjacent, err := A.Adj()
 	return MatrixMul(1/determinant, adjacent), err
 }
 
-// Adj returns the adjacent Matrix
-func (A *Matrix) Adj() (Matrix, *string) {
+// Adj returns the adjugate Matrix
+func (A *Matrix) Adj() (Matrix, error) {
 	output := create2DArray(len(*A), len((*A)[0]))
 
 	for i := range output {

@@ -1,54 +1,46 @@
 package main
 
-import (
-	"math/rand"
-)
+// A := Matrix{
+// 	{1, 2, 3},
+// 	{4, 5, 6},
+// 	{7, 8, 9},
+// }
+// B := Matrix{
+// 	{1, 0, 0},
+// 	{0, 0, 1},
+// 	{0, 1, 0},
+// }
+// E := Matrix{
+// 	{1, 2},
+// 	{2, -3},
+// }
+// H := Matrix{
+// 	{2, 3, 9, 9},
+// 	{4, 7, -7, -7},
+// 	{3, 11, 1, 1},
+// 	{1, 2, -3, -1}}
 
-func forRange() {
-	output := [1000][1000]float64{}
-
-	for i := range output {
-		for j := range output[i] {
-			output[i][j] = float64(i + j)
-		}
-	}
-}
-
-func forClassic() {
-	output := [1000][1000]float64{}
-
-	for i := 0; i < len(output); i++ {
-		for j := 0; j < len(output[i]); j++ {
-			output[i][j] = float64(i + j)
-		}
-	}
-}
+// A := Matrix(create2DArray(10, 10))
+// for i := range A {
+// 	for j := range A[i] {
+// 		A[i][j] = rand.Float64()
+// 	}
+// }
 
 func matrixBenchmark() {
-	// 	A := Matrix{
-	// 		{1, 2, 3},
-	// 		{4, 5, 6},
-	// 		{7, 8, 9},
-	// 	}
-	// B := Matrix{
-	// 	{1, 0, 0},
-	// 	{0, 0, 1},
-	// 	{0, 1, 0},
-	// }
-	// E := Matrix{
-	// 	{1, 2},
-	// 	{2, -3},
-	// }
-
-	A := Matrix(create2DArray(10, 10))
-	for i := range A {
-		for j := range A[i] {
-			A[i][j] = rand.Float64()
-		}
+	A := Matrix{
+		{1, 2, 1, 0, 23, 45, -12, 6, -1, 3},
+		{4, 5, 2, -5, -1, -5, 0, 6, 21, 4},
+		{4, 7, -7, 8, -8, 9, 4, 1, 6, 5},
+		{7, 2, 5, 11, 2, 43, 41, 13, 15, 67},
+		{-14, 15, 1, -7, 6, -81, 1, 456, -4, -464},
+		{-2, 5, 144, 3, 10, 17, 78, 29, 65, 9},
+		{4, 46, -561, 145, -5, 54, 613, 41, 854, 6},
+		{4, 21, -56, 41, 84, 879, 12, 84, 6, 45},
+		{4, 71, 54, 12051, 65, 98, 7, 86951, 1, 51},
+		{-100, -1, -8, 4, 2, 7, 4, -42, 7, 42},
 	}
 
-	// create2DArray(10, 10)
-	// I(100)
 	// MatrixAdd(A, B)
 	// MatrixSub(A, B)
 	// DotProduct(A, B)
@@ -59,6 +51,6 @@ func matrixBenchmark() {
 	// A.Minor(2, 2)
 	// A.Cofactor(2, 2)
 	A.Det()
-	A.Adj()
+	// A.Adj()
 	// E.Inv()
 }
