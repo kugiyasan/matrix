@@ -47,7 +47,7 @@ func matrixBenchmark() {
 	// DotProduct(B, A)
 	// MatrixMul(6, A)
 	// A.T()
-	// A.Tr()
+	// A.Trace()
 	// A.Minor(2, 2)
 	// A.Cofactor(2, 2)
 	A.Det()

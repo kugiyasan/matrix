@@ -24,20 +24,25 @@ func print(i ...interface{}) {
 	}
 }
 
+func timeit(stmt func(), number int) time.Duration {
+	start := time.Now()
+	for n := 0; n < number; n++ {
+		stmt()
+	}
+	return time.Since(start)
+}
+
 func timeitRepeat(stmt func(), number, repeat int) []time.Duration {
 	times := make([]time.Duration, repeat)
 
 	for r := 0; r < repeat; r++ {
-		start := time.Now()
-		for n := 0; n < number; n++ {
-			stmt()
-		}
-		times[r] = time.Since(start)
+		times[r] = timeit(stmt, number)
 	}
 	return times
 }
 
 func main() {
 	repeat := 5
-	fmt.Println(timeitRepeat(matrixBenchmark, 10000, repeat))
+	fmt.Println(timeitRepeat(matrixBenchmark, 100000, repeat))
+	// timeitRepeat(matrixBenchmark, 10, 1)
 }

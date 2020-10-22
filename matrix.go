@@ -17,6 +17,41 @@ func create2DArray(x, y int) [][]float64 {
 	return array
 }
 
+func copyMatrix(A *Matrix) [][]float64 {
+	AM := create2DArray(len(*A), len((*A)[0]))
+	for y := range AM {
+		for x := range AM[y] {
+			AM[y][x] = (*A)[y][x]
+		}
+	}
+	return AM
+}
+
+func isUpperTriangular(A *Matrix) bool {
+	for i := 0; i < len(*A)-1; i++ {
+		for j := i + 1; j < len(*A); j++ {
+			if (*A)[i][j] != 0 {
+				return false
+			}
+		}
+	}
+	return true
+}
+func isLowerTriangular(A *Matrix) bool {
+	for i := 1; i < len(*A); i++ {
+		for j := 0; j < i+1; j++ {
+			if (*A)[i][j] != 0 {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func isTriangular(A *Matrix) bool {
+	return isUpperTriangular(A) || isLowerTriangular(A)
+}
+
 // I creates a identity Matrix of size n
 func I(n int) Matrix {
 	array := create2DArray(n, n)
@@ -108,8 +143,8 @@ func (A *Matrix) T() Matrix {
 	return output
 }
 
-// Tr returns the trace of the Matrix
-func (A *Matrix) Tr() (float64, error) {
+// Trace returns the trace of the Matrix
+func (A *Matrix) Trace() (float64, error) {
 	if len(*A) != len((*A)[0]) {
 		err := "The matrix should have a square shape"
 		return 0, errors.New(err)
@@ -155,24 +190,24 @@ func (A Matrix) Cofactor(i, j int) (float64, error) {
 // Det returns the determinant of a square Matrix
 func (A *Matrix) Det() float64 {
 	n := len(*A)
+	var AM [][]float64
 
-	AM := create2DArray(len(*A), len((*A)[0]))
-	for y := range AM {
-		for x := range AM[y] {
-			AM[y][x] = (*A)[y][x]
-		}
-	}
+	if isTriangular(A) {
+		AM = *A
+	} else {
+		AM = copyMatrix(A)
 
-	// convert the matrix into a triangular form
-	for diag := 0; diag < n; diag++ {
-		for i := diag + 1; i < n; i++ {
-			if AM[diag][diag] == 0 {
-				AM[diag][diag] = 1e-200
-			}
+		// convert the matrix into a triangular form
+		for diag := 0; diag < n; diag++ {
+			for i := diag + 1; i < n; i++ {
+				if AM[diag][diag] == 0 {
+					AM[diag][diag] = 1e-200
+				}
 
-			scale := AM[i][diag] / AM[diag][diag]
-			for j := 0; j < n; j++ {
-				AM[i][j] -= (scale * AM[diag][j])
+				scale := AM[i][diag] / AM[diag][diag]
+				for j := 0; j < n; j++ {
+					AM[i][j] -= (scale * AM[diag][j])
+				}
 			}
 		}
 	}
@@ -196,7 +231,7 @@ func (A *Matrix) Inv() (Matrix, error) {
 	return MatrixMul(1/determinant, adjacent), err
 }
 
-// Adj returns the adjugate Matrix
+// Adj returns the adjugated Matrix
 func (A *Matrix) Adj() (Matrix, error) {
 	output := create2DArray(len(*A), len((*A)[0]))
 
